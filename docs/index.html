@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Pages Should You Review First? A Refresh-Priority Study</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #e2e2e2;
+    --accent: #2b5fb0;
+    --accent-soft: #eef3fb;
+    --bg: #fdfdfb;
+    --code-bg: #f4f4f2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.65;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 100px;
+  }
+  header.title-block {
+    margin-bottom: 40px;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 28px;
+  }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 2.1rem;
+    line-height: 1.25;
+    margin: 0 0 14px;
+  }
+  .byline {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  h2 {
+    font-size: 1.35rem;
+    margin-top: 52px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin-top: 28px;
+    margin-bottom: 8px;
+  }
+  p { margin: 0 0 16px; }
+  .abstract {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  .abstract p:last-child { margin-bottom: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.94rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--code-bg);
+    font-weight: 600;
+  }
+  tr.highlight td { font-weight: 600; }
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.88em;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .callout {
+    border: 1px solid var(--line);
+    border-left: 4px solid #c0392b;
+    background: #fdf3f2;
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .callout.finding {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .callout strong { display: block; margin-bottom: 4px; }
+  figure {
+    margin: 24px 0;
+    text-align: center;
+  }
+  figure img {
+    max-width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  figcaption {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  ul, ol { padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  a { color: var(--accent); }
+  .limits-list li { margin-bottom: 10px; }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .toc {
+    background: var(--code-bg);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+  }
+  .toc a { display: block; padding: 3px 0; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  @media (max-width: 600px) {
+    h1 { font-size: 1.6rem; }
+    .wrap { padding: 32px 16px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="title-block">
+    <div class="kicker">FlyRank ML Internship &middot; Research Paper</div>
+    <h1>Which Pages Should You Review First? A Refresh-Priority Study on Real Search Data</h1>
+    <div class="byline">Muneeb Tahir &middot; Machine Learning Track</div>
+  </header>
+
+  <div class="toc">
+    <a href="#abstract">Abstract</a>
+    <a href="#intro">Introduction</a>
+    <a href="#data">Data</a>
+    <a href="#methodology">Methodology</a>
+    <a href="#results">Results</a>
+    <a href="#limitations">Limitations &amp; Honest Framing</a>
+    <a href="#recommendations">Ranked Recommendations</a>
+    <a href="#reproducibility">Reproducibility</a>
+    <a href="#acknowledgments">Acknowledgments &amp; Data Credit</a>
+  </div>
+
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <div class="abstract">
+      <p>
+        Content teams can only review a fraction of their pages each cycle, so the real
+        question is not "is this page declining?" but "which pages should a reviewer look at
+        first?" Using FlyRank's anonymized search-performance dataset (30,000 content pages,
+        cross-checked against a 78.8-million-row production warehouse), I built a transparent
+        hand-written baseline and a client-validated Random Forest ranking model. The model
+        ranks pages at a Precision@50 of 0.56 against a baseline of 0.50 and a base decline
+        rate of 0.526 &mdash; a real but modest improvement, and one that only holds up once
+        client-level leakage is removed from the validation split. This paper is a
+        decision-support tool for a human reviewer with limited time, not an automated
+        content-editing system.
+      </p>
+    </div>
+  </section>
+
+  <section id="intro">
+    <h2>Introduction / Problem</h2>
+    <p>
+      Picture a content editor with 500 pages under their care and time to review perhaps
+      50 of them this month. The obvious first instinct is to start with the oldest, most
+      neglected pages &mdash; the assumption that staleness predicts decline feels almost too
+      obvious to test. This paper tests it anyway, on real (anonymized) search performance
+      data, and the obvious rule turns out to be wrong: in this portfolio, stale pages
+      actually decline <em>less</em> often than fresh ones. That single reversal is the
+      starting point for everything that follows &mdash; a simple rule, a model built to beat
+      it honestly, and a ranked list an editor can actually act on.
+    </p>
+  </section>
+
+  <section id="data">
+    <h2>Data</h2>
+    <p>
+      This study uses the FlyRank ML Internship starter dataset
+      (<code>content_refresh_anonymized.csv</code>), a 30,000-row anonymized sample of content
+      performance across position, impressions, clicks, sessions, freshness, and content
+      metadata. Every finding in this paper was also spot-checked against the full production
+      release &mdash; <code>flyrank_pseudonymized_warehouse_release_v20260703</code> &mdash;
+      hosted on Hugging Face, which contains 78,835,655 daily fact rows across roughly 70
+      clients. A verification query against one mid-panel month
+      (<code>month=2026-03</code>) confirmed 9,841,378 rows spanning the full month with no
+      duplicate (client, content, day) combinations, matching the expected grain of one row
+      per content item per client per day.
+    </p>
+    <p>
+      <strong>Excluded on purpose:</strong> product-computed decision flags such as
+      <code>health_score</code>, <code>priority_score</code>, and <code>action_type</code> are
+      not used anywhere in this analysis. Feeding a product's own existing decision into a
+      discovery model would only teach it to copy that decision, not find new signal. Raw
+      client names, domains, URLs, and query text were never available in this release &mdash;
+      all identifiers are pseudonymized hashes used only for joining and grouping.
+    </p>
+  </section>
+
+  <section id="methodology">
+    <h2>Methodology</h2>
+
+    <h3>Label</h3>
+    <p>
+      The target, <code>is_declining</code>, is defined as <code>trend_direction == "down"</code>
+      &mdash; a same-window proxy computed from 30-day impression change, not a validated
+      future outcome. This is a known limitation, discussed further below.
+    </p>
+
+    <h3>Features</h3>
+    <p>
+      Seven observable signals, all knowable before any review decision: 90-day impressions,
+      90-day sessions, content age, days since last update, click-through rate, average
+      position, and word count. No product-computed flags or future-window data are included.
+    </p>
+
+    <h3>Baseline</h3>
+    <p>
+      A transparent, hand-written rule: <code>score = is_stale &times; is_visible &times;
+      impressions_90d</code>, where staleness is 180+ days since update and visibility is
+      500+ impressions in 90 days. Two signal checks were run before encoding this rule:
+    </p>
+    <table>
+      <tr><th>Signal</th><th>Result</th><th>Verdict</th></tr>
+      <tr><td>Staleness (180+ days)</td><td>Stale pages decline 47.1% of the time vs. 54.3% for non-stale pages</td><td><strong>OPPOSITE</strong> of the assumption</td></tr>
+      <tr><td>Low CTR at position</td><td>59.3% decline rate vs. 58.3% for others &mdash; barely above the 54.2% base rate</td><td><strong>MIXED</strong> &mdash; weak signal</td></tr>
+    </table>
+    <div class="callout finding">
+      <strong>Key finding</strong>
+      Staleness alone does not predict decline in this portfolio &mdash; if anything, the
+      relationship runs the other way. The baseline rule was kept as a visibility/volume
+      filter (which pages are worth a human's attention at all) rather than a decline
+      predictor.
+    </div>
+
+    <h3>Model</h3>
+    <p>
+      A Random Forest classifier (200 trees, max depth 6, class-balanced) trained on the
+      seven observable features above, evaluated with predicted probability ranked at
+      Precision@K &mdash; the fraction of the top-K ranked pages that are actually declining.
+    </p>
+
+    <h3>Validation design</h3>
+    <p>
+      Pages from the same client can share hidden structural similarities that a naive random
+      split would let a model memorize rather than learn from. This study uses
+      <strong>client-holdout validation</strong> (grouped split by <code>client_id</code>):
+      whole clients are held out of training and only ever appear in the test set.
+    </p>
+    <div class="callout">
+      <strong>Why this matters &mdash; the honest-split test</strong>
+      Re-running the identical model under a plain random split produced Precision@20 of
+      0.950 and Precision@50 of 0.900 &mdash; scores that look almost too good. Under the
+      client-grouped split, the same model scores 0.550 and 0.560. That 0.34&ndash;0.40 point
+      gap is not real predictive skill; it is the model partially memorizing per-client
+      patterns it had already seen. The grouped-split number is the one reported throughout
+      this paper.
+    </div>
+
+    <h3>Leakage checks</h3>
+    <p>
+      Following an explicit leakage audit, a deliberately redundant feature
+      (a duplicate of the baseline rule) was added to the model to confirm the test harness
+      would catch real leakage. It did not cause a score jump (Precision@50 stayed roughly
+      flat, 0.560 to 0.540), which is expected since the feature was redundant with existing
+      inputs rather than a genuine leak &mdash; and confirms the validation harness is sound.
+    </p>
+  </section>
+
+  <section id="results">
+    <h2>Results</h2>
+    <p>
+      The model beats the hand-written baseline at both evaluated cutoffs, and both beat the
+      base rate of pages that are actually declining:
+    </p>
+    <table>
+      <tr><th>Method</th><th>Precision@20</th><th>Precision@50</th></tr>
+      <tr><td>Baseline (hand rule)</td><td>0.400</td><td>0.500</td></tr>
+      <tr class="highlight"><td>Model (Random Forest, client split)</td><td>0.550</td><td>0.560</td></tr>
+      <tr><td>Base rate (always predict majority)</td><td colspan="2">0.526</td></tr>
+    </table>
+
+    <h3>What drives the model</h3>
+    <table>
+      <tr><th>Feature</th><th>Importance</th></tr>
+      <tr><td>impressions_90d</td><td>0.427</td></tr>
+      <tr><td>avg_position</td><td>0.197</td></tr>
+      <tr><td>content_age_days</td><td>0.115</td></tr>
+      <tr><td>word_count</td><td>0.077</td></tr>
+      <tr><td>ctr</td><td>0.071</td></tr>
+      <tr><td>sessions_90d</td><td>0.062</td></tr>
+      <tr><td>days_since_last_update</td><td>0.052</td></tr>
+    </table>
+    <p>
+      Notably, <code>days_since_last_update</code> &mdash; the exact feature the baseline
+      rule was built around &mdash; ranks last in importance. The model relies primarily on
+      traffic volume and ranking position, which is consistent with the staleness signal
+      check above.
+    </p>
+
+    <figure>
+      <img src="figures/reason_code_breakdown.png" alt="Bar chart of flagged pages by reason code">
+      <figcaption>
+        Distribution of reason codes among pages flagged for review. "no_flag" remains the
+        largest bucket even among flagged pages &mdash; see Limitations.
+      </figcaption>
+    </figure>
+
+    <h3>Error analysis</h3>
+    <p>
+      42.5% of test-set predictions were wrong at a 0.5 probability threshold &mdash; a
+      reminder that this model is a ranking aid, not a reliable individual-page classifier.
+      Reviewing specific wrong cases showed the model sometimes over-weights low CTR or low
+      position as decline signals even when a page is not actually declining; one flagged
+      example also carried a CTR value above 1.0, an impossible value that is almost
+      certainly a data artifact rather than a real signal, and was treated as such.
+    </p>
+  </section>
+
+  <section id="limitations">
+    <h2>Limitations &amp; Honest Framing</h2>
+    <ul class="limits-list">
+      <li><strong>Sample size:</strong> results are built on a 30,000-row anonymized starter
+        slice, not the full 78.8-million-row warehouse. The grain and row counts were verified
+        against the full release, but model results have not been re-run at full scale.</li>
+      <li><strong>Proxy label:</strong> <code>is_declining</code> is a same-window trend
+        bucket, not a validated future outcome. A stronger design would predict a future
+        30-day window from a strictly prior feature window.</li>
+      <li><strong>Error rate:</strong> a 42.5% wrong-prediction rate at the default threshold
+        means this is decision-support for prioritizing a review queue, not a standalone
+        classifier to trust page-by-page.</li>
+      <li><strong>Ranking can favor low-traffic pages:</strong> sorting purely by model
+        probability surfaced several pages with modest impression counts ahead of
+        higher-traffic pages; a production version should pair the model score with an
+        explicit volume floor.</li>
+      <li><strong>Incomplete reason coverage:</strong> roughly a third of pages sent to
+        "review" carry no specific reason code, since the action threshold is looser than any
+        individual reason-code threshold &mdash; a real usability gap for a human reviewer.</li>
+      <li><strong>No causal claims:</strong> this is cross-sectional, observational data. It
+        supports "these pages look worth reviewing first, because&hellip;" &mdash; it does
+        not support "refreshing this page will cause it to recover," which would require an
+        actual experiment.</li>
+    </ul>
+  </section>
+
+  <section id="recommendations">
+    <h2>Ranked Recommendations</h2>
+    <p>
+      The full ranked queue (22,301 pages, scored and reason-coded) is exported to
+      <code>work/outputs/content_action_playbook.csv</code> in the project repository. In
+      practice:
+    </p>
+    <ol>
+      <li>A human reviewer should start with pages carrying a
+        <code>model_flagged_high_risk</code> or <code>model_flagged_low_volume</code> reason
+        code and meaningful traffic, since these combine the model's strongest signal with an
+        explicit, readable reason.</li>
+      <li><code>stale_and_visible</code> and <code>low_ctr_for_age</code> pages are secondary
+        candidates &mdash; worth a look, but staleness alone should not be treated as evidence
+        of decline given the signal-check finding above.</li>
+      <li><code>no_flag</code> pages in the review queue should be deprioritized or reviewed
+        last, since the model offers no specific reason for them.</li>
+      <li>Nothing in this pipeline should be automated end-to-end: every flagged page needs a
+        human check for consolidation, seasonality, or SERP-level explanations before any
+        content action is taken (see the full no-go list in the project's action playbook
+        notebook).</li>
+    </ol>
+  </section>
+
+  <section id="reproducibility">
+    <h2>Reproducibility</h2>
+    <p>
+      All code, data contracts, and notebooks referenced in this paper are public in the
+      project repository:
+      <a href="https://github.com/Muneeb-th/ML-Assignment-1" target="_blank" rel="noopener">
+        github.com/Muneeb-th/ML-Assignment-1</a>. Random seeds are fixed at 42 throughout for
+      both the train/test split and the model itself. Key notebooks, in order:
+    </p>
+    <ul>
+      <li><code>work/notebooks/w01_research_question.ipynb</code> &mdash; lane selection</li>
+      <li><code>work/notebooks/w02_ml_task_framing.ipynb</code> &mdash; task framing</li>
+      <li><code>work/notebooks/w03_data_contract.ipynb</code> &mdash; data contract &amp; warehouse verification</li>
+      <li><code>work/notebooks/w04_baseline_score.ipynb</code> &mdash; baseline rule &amp; signal checks</li>
+      <li><code>work/notebooks/w05_model.ipynb</code> &mdash; model training &amp; baseline comparison</li>
+      <li><code>work/notebooks/w06_validation_audit.ipynb</code> &mdash; honest-split audit &amp; leakage checks</li>
+      <li><code>work/notebooks/w07_action_playbook.ipynb</code> &mdash; ranked queue, reason codes, exports</li>
+    </ul>
+  </section>
+
+  <section id="acknowledgments">
+    <h2>Acknowledgments &amp; Data Credit</h2>
+    <p>
+      Built on the FlyRank ML Internship dataset, provided by
+      <a href="https://flyrank.ai" target="_blank" rel="noopener">FlyRank</a>. All data used
+      is anonymized and pseudonymized per FlyRank's internship data-use terms; no client
+      names, domains, URLs, or raw query text appear anywhere in this study.
+    </p>
+  </section>
+
+  <footer>
+    Machine Learning Track &middot; FlyRank AI Internship &middot; 2026
+  </footer>
+
+</div>
+</body>
+</html>
